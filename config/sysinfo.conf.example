@@ -1,0 +1,3 @@
+# Contoh konfigurasi (tanpa credential). Belum dibaca script; disiapkan untuk P12-P15.
+OUT_DIR=./output
+SECTION=all
