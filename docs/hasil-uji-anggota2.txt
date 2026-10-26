@@ -1,0 +1,9 @@
+LULUS: integer valid
+LULUS: integer huruf ditolak
+LULUS: range dalam batas
+LULUS: range di luar batas
+LULUS: string kosong ditolak
+LULUS: file ada
+LULUS: file tidak ada
+[2026-10-26 06:30:05] [INFO] Tes selesai: 7 lulus, 0 gagal
+Total: 7 lulus, 0 gagal
