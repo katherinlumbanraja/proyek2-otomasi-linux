@@ -12,3 +12,20 @@ _log() {
 log_info()  { _log "INFO"  "$@"; }
 log_warn()  { _log "WARN"  "$@"; }
 log_error() { _log "ERROR" "$@" >&2; }
+
+# log LEVEL "pesan" - pembungkus yang dipakai bin/sysinfo.sh
+log() {
+  local level="${1:-INFO}"; shift
+  case "$level" in
+    WARN)  log_warn  "$@" ;;
+    ERROR) log_error "$@" ;;
+    *)     log_info  "$@" ;;
+  esac
+}
+
+# die KODE "pesan" - catat error lalu keluar dengan exit status KODE
+die() {
+  local code="${1:-1}"; shift
+  log_error "$@"
+  exit "$code"
+}
