@@ -1,0 +1,7 @@
+[2026-10-26 13:20:27] [INFO] Mulai. section=all outdir=/tmp/out
+[2026-10-26 13:20:27] [INFO] Sukses. Laporan: /tmp/out/sysinfo_20261026_132027.txt
+[2026-10-26 13:20:27] [INFO] Mulai. section=xyz outdir=/home/<user>/proyek2-otomasi-linux/output
+[2026-10-26 13:20:28] [ERROR] Section tidak valid: 'xyz' (pilihan: all os cpu mem disk net)
+[2026-10-26 13:20:28] [INFO] Mulai. section=all outdir=/folder/tidak/ada
+[2026-10-26 13:20:28] [ERROR] Direktori output tidak ditemukan: /folder/tidak/ada
+[2026-10-26 13:20:28] [ERROR] Opsi -o butuh nilai

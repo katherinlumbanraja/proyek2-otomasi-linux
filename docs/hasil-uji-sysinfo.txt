@@ -1,0 +1,33 @@
+Hasil uji sysinfo.sh - 2026-10-26 13:20:27
+
+### A. Berhasil
+$ bash bin/sysinfo.sh -o /tmp/out -s all
+[2026-10-26 13:20:27] [INFO] Mulai. section=all outdir=/tmp/out
+[2026-10-26 13:20:27] [INFO] Sukses. Laporan: /tmp/out/sysinfo_20261026_132027.txt
+exit=0
+
+### B. Section tidak valid
+$ bash bin/sysinfo.sh -s xyz
+[2026-10-26 13:20:27] [INFO] Mulai. section=xyz outdir=/home/<user>/proyek2-otomasi-linux/output
+[2026-10-26 13:20:28] [ERROR] Section tidak valid: 'xyz' (pilihan: all os cpu mem disk net)
+exit=2
+
+### C. Direktori tidak ada
+$ bash bin/sysinfo.sh -o /folder/tidak/ada
+[2026-10-26 13:20:28] [INFO] Mulai. section=all outdir=/folder/tidak/ada
+[2026-10-26 13:20:28] [ERROR] Direktori output tidak ditemukan: /folder/tidak/ada
+exit=3
+
+### D. Opsi tanpa nilai
+$ bash bin/sysinfo.sh -o
+[2026-10-26 13:20:28] [ERROR] Opsi -o butuh nilai
+exit=2
+
+Interpretasi:
+- Kasus A berhasil: exit 0 dan laporan terbentuk, sesuai harapan.
+- Kasus B ditolak dengan exit 2 karena section "xyz" tidak termasuk pilihan yang valid.
+- Kasus C gagal dengan exit 3 karena direktori output tidak ada.
+- Kasus D gagal dengan exit 2 karena opsi -o membutuhkan nilai.
+- Waktu pada log memakai zona waktu VM (UTC), sehingga berbeda 7 jam dari WIB.
+- Exit 4 (direktori tidak dapat ditulis) belum diuji.
+Catatan: nama pengguna pada path /home disamarkan menjadi <user>.
