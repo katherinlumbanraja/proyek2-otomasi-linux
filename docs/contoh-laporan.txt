@@ -1,19 +1,19 @@
-Laporan sistem - 2026-10-27 15:54:50
+Laporan sistem - 2026-10-27 15:57:29
 == OS ==
 Distribusi : Ubuntu 26.04 LTS
 Hostname   : so26-057-d
 Kernel     : 7.0.0-38-generic
 Arsitektur : x86_64
-Uptime     : up 3 minutes
+Uptime     : up 6 minutes
 
 == CPU ==
 Model      : AMD Ryzen 5 7535HS with Radeon Graphics
 Jumlah core: 2
-Load avg   : 0.30 0.52 0.25
+Load avg   : 0.06 0.34 0.22
 
 == Memori ==
                total        used        free      shared  buff/cache   available
-Mem:           1.6Gi       339Mi       885Mi       1.1Mi       562Mi       1.3Gi
+Mem:           1.6Gi       351Mi       870Mi       1.1Mi       565Mi       1.3Gi
 Swap:          2.0Gi          0B       2.0Gi
 
 == Disk ==
