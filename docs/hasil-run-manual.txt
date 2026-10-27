@@ -1,0 +1,3 @@
+$ ./bin/sysinfo.sh -s all -o ./output   -> exit code: 0
+$ ./bin/sysinfo.sh -s ngawur            -> exit code: 2
+$ ./bin/sysinfo.sh -o ""                -> exit code: 2
