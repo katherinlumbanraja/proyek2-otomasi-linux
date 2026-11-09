@@ -1,0 +1,6 @@
+PASS  M2-01 berhasil: backup data simulasi (exit=0)
+PASS  M2-02 berhasil: restore + verifikasi (exit=0)
+PASS  M2-03 gagal: sumber di luar data/ ditolak (exit=2)
+PASS  M2-04 gagal: archive tidak ditemukan (exit=3)
+PASS  M2-05 gagal: archive diubah (checksum beda) (exit=6)
+Ringkasan Modul 2: 5 lulus, 0 gagal
