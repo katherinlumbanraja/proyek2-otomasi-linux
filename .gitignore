@@ -1,2 +1,7 @@
+backups/
+id_*
+*.key
 logs/
 output/
+*.pem
+restore/
