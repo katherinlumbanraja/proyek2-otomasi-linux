@@ -1,0 +1,5 @@
+PASS  M1-01 berhasil: layanan hidup, disk di bawah ambang (exit=0)
+PASS  M1-02 gagal: layanan mati (exit=10)
+PASS  M1-03 gagal: disk melewati ambang (-t 1) (exit=11)
+PASS  M1-04 gagal: ambang bukan angka (exit=2)
+Ringkasan Modul 1: 4 lulus, 0 gagal
