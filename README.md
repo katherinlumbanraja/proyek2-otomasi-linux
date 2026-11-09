@@ -180,3 +180,76 @@ Pembagian tugas anggota ada di [KONTRIBUSI.md](KONTRIBUSI.md).
 - Output dinamis (hostname, IP, penggunaan memori) berbeda pada setiap sistem.
 - Pengujian otomatis baru mencakup fungsi validasi; pengujian program utama (A-D) masih dijalankan manual.
 - Belum ada penjadwalan otomatis; direncanakan pada tahap P12-P15.
+
+---
+
+# SysGuard v2: Monitoring, Backup, dan Container
+
+## Arsitektur dan pembagian host/container
+```
+Host (VM Ubuntu)                          Container Docker
++----------------------------------+      +------------------------+
+| bin/check.sh      (monitoring)   | HTTP | sysguard-svc (nginx)   |
+| bin/backup.sh     (backup)       |----->| port 8080, non-root    |
+| bin/restore.sh    (restore)      |      | limit CPU 0.5, 128MB   |
+| bin/send_backup.sh (SCP)         |      +------------------------+
+| bin/sysguard.sh   (integrasi)    |
++----------------------------------+
+```
+
+Alur: check.sh memeriksa layanan dan disk. Jika OK, backup.sh membuat archive, lalu restore.sh memverifikasi. Jika monitoring gagal, backup ditolak (exit 20).
+
+## Instalasi
+```bash
+git clone https://github.com/katherinlumbanraja/proyek2-otomasi-linux.git
+cd proyek2-otomasi-linux
+sudo apt install -y curl python3 openssh-client
+```
+
+## Menjalankan Modul 2
+```bash
+bash bin/backup.sh
+bash bin/restore.sh -a backups/<nama>.tar.gz -d restore/demo
+```
+
+## Menguji
+```bash
+bash tests/test_modul1.sh
+bash tests/test_modul2.sh
+bash tests/test_integrasi.sh
+```
+
+## Exit status Modul 2
+| Kode | Arti |
+|------|------|
+| 0 | Sukses |
+| 2 | Input salah (termasuk sumber di luar data/) |
+| 3 | File tidak ditemukan |
+| 4 | Folder tujuan tidak bisa ditulis |
+| 5 | Backup atau ekstraksi gagal |
+| 6 | Checksum archive tidak cocok |
+| 7 | Verifikasi isi file gagal |
+| 20 | Backup ditolak karena monitoring gagal |
+
+## Memantau
+```bash
+bash docker/monitor.sh
+cat logs/sysguard.log | tail -20
+```
+
+## Cleanup
+```bash
+bash docker/stop.sh -r
+rm -rf backups restore logs
+```
+
+## Rollback
+```bash
+git fetch --tags
+git checkout P2-FINAL-v01
+```
+
+## Keterbatasan
+- Data yang di-backup hanya data simulasi di folder data/.
+- Archive belum dienkripsi.
+- Pengujian SCP dan Docker dijalankan manual di VM.
