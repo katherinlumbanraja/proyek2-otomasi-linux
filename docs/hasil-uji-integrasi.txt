@@ -1,0 +1,5 @@
+PASS  INT-01 berhasil: monitoring OK, backup dan restore terverifikasi (exit=0)
+PASS  INT-01b file hasil restore ada
+PASS  INT-02 gagal: layanan mati, backup ditolak (exit 20) (exit=20)
+PASS  INT-02b tidak ada backup baru saat ditolak (1 -> 1)
+Ringkasan integrasi: 4 lulus, 0 gagal
