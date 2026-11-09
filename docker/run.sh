@@ -33,5 +33,14 @@ docker run -d --name "$NAME" --network "$NET" \
   -v "$BASE_DIR/data:/usr/share/nginx/html/data:ro" \
   "$IMAGE" >/dev/null || sg_die 9 "docker run gagal"
 
-sg_log INFO "Container berjalan. Cek: curl -s http://127.0.0.1:$PORT/"
+sg_log INFO "Menunggu layanan siap (maks 20 detik)"
+for _ in $(seq 1 20); do
+  if curl -s -o /dev/null -m 2 "http://127.0.0.1:$PORT/"; then
+    sg_log INFO "Container berjalan dan layanan merespons: http://127.0.0.1:$PORT/"
+    exit 0
+  fi
+  sleep 1
+done
+docker logs --tail 20 "$NAME" >&2 || true
+sg_die 9 "Layanan tidak merespons setelah 20 detik"
 exit 0
