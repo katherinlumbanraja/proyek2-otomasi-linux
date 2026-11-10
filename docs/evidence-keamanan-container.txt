@@ -1,0 +1,12 @@
+# Bukti pembatasan keamanan container - 2026-11-10 06:02:49
+## Privileged, CapDrop, SecurityOpt
+Privileged=false CapDrop=[ALL] SecurityOpt=[no-new-privileges]
+## Mount (tidak boleh ada docker.sock)
+/home/katherinlr/proyek2-otomasi-linux/data -> /usr/share/nginx/html/data rw=false
+
+## Port yang dipublikasikan
+{"8080/tcp":[{"HostIp":"127.0.0.1","HostPort":"8080"}]}
+## User proses di dalam container
+uid=101(nginx) gid=101(nginx) groups=101(nginx)
+## Jumlah kemunculan docker.sock di konfigurasi container
+0
