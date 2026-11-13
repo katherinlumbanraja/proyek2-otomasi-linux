@@ -1,0 +1,30 @@
+# Bukti uji akses - 2026-11-13 15:24:41
+## Permission folder
+drwx------ 2 backupuser backupuser 4096 Nov  9 15:58 /srv/sysguard-backup
+## 1 DIIZINKAN: kirim ke backupuser
+[2026-11-13 15:24:41] [INFO] Kirim via SCP: backups/backup_20261113_152441_4220.tar.gz -> backupuser@127.0.0.1:/srv/sysguard-backup
+[2026-11-13 15:24:43] [INFO] SCP sukses
+exit: 0
+total 24
+-rw-rw-r-- 1 backupuser backupuser 162 Nov  9 16:00 backup_20261109_155622_4678.manifest
+-rw-rw-r-- 1 backupuser backupuser 325 Nov  9 16:00 backup_20261109_155622_4678.tar.gz
+-rw-rw-r-- 1 backupuser backupuser 101 Nov  9 16:00 backup_20261109_155622_4678.tar.gz.sha256
+-rw-rw-r-- 1 backupuser backupuser 162 Nov 13 15:24 backup_20261113_152441_4220.manifest
+-rw-rw-r-- 1 backupuser backupuser 325 Nov 13 15:24 backup_20261113_152441_4220.tar.gz
+-rw-rw-r-- 1 backupuser backupuser 101 Nov 13 15:24 backup_20261113_152441_4220.tar.gz.sha256
+## 2 DITOLAK: user biasa membaca folder backup
+ls: cannot open directory '/srv/sysguard-backup': Permission denied
+exit: 2
+## 3 DITOLAK: kirim ke folder yang tidak boleh ditulis
+[2026-11-13 15:24:43] [INFO] Kirim via SCP: backups/backup_20261113_152441_4220.tar.gz -> backupuser@127.0.0.1:/etc
+scp: dest open "/etc/backup_20261113_152441_4220.tar.gz": Permission denied
+scp: failed to upload file backups/backup_20261113_152441_4220.tar.gz to /etc
+scp: dest open "/etc/backup_20261113_152441_4220.tar.gz.sha256": Permission denied
+scp: failed to upload file backups/backup_20261113_152441_4220.tar.gz.sha256 to /etc
+scp: dest open "/etc/backup_20261113_152441_4220.manifest": Permission denied
+scp: failed to upload file backups/backup_20261113_152441_4220.manifest to /etc
+[2026-11-13 15:24:43] [ERROR] SCP gagal (akses ditolak, kunci salah, atau jaringan): backupuser@127.0.0.1:/etc (exit=8)
+exit: 8
+## 4 DITOLAK: format tujuan salah
+[2026-11-13 15:24:44] [ERROR] Format tujuan salah (user@host:/folder): 'salah' (exit=2)
+exit: 2
