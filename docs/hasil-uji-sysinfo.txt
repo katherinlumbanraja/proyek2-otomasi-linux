@@ -29,5 +29,5 @@ Interpretasi:
 - Kasus C gagal dengan exit 3 karena direktori output tidak ada.
 - Kasus D gagal dengan exit 2 karena opsi -o membutuhkan nilai.
 - Waktu pada log memakai zona waktu VM (UTC), sehingga berbeda 7 jam dari WIB.
-- Exit 4 (direktori tidak dapat ditulis) belum diuji.
+- Kasus E: bash bin/sysinfo.sh -o /usr menghasilkan exit 4 (direktori tidak dapat ditulis).
 Catatan: nama pengguna pada path /home disamarkan menjadi <user>.

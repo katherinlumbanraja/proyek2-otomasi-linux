@@ -1,7 +1,7 @@
 # Catatan Kontribusi Anggota
 
-| Anggota | Akun GitHub | Peran | Kontribusi (berdasarkan riwayat commit) |
+| Anggota | Akun GitHub | Kontribusi V1 (checkpoint P11) | Kontribusi V2 (proyek akhir) |
 |---|---|---|---|
-| KATHERIN LUMBAN RAJA | `katherinlumbanraja` | Owner/Integrator | Inisialisasi repo dan `.gitignore`, program utama `bin/sysinfo.sh` (getopts, alur, exit status), contoh konfigurasi, perapian struktur folder (`lib/`, `tests/`) |
-| ZAHWA DINASTY | `zahwa1515` | Validasi, log, test, pengumpulan data | `lib/log.sh` (`log`, `die`), `lib/validate.sh` (`validate_section`, `validate_outdir`, `require_cmd`), `tests/run_tests.sh`, hasil uji validasi, `lib/collect.sh` (`section_os`, `section_cpu`, `section_mem`, `section_disk`, `section_net`) |
-| FARENINA AULIA RAMADHANI | `aren1910` | Dokumentasi dan pengujian | `README.md`, `KONTRIBUSI.md`, pengujian `sysinfo.sh` di VM (`docs/hasil-uji-sysinfo.txt`, `docs/contoh-log.txt`) |
+| Katherin Agustina Lumban Raja | `katherinlumbanraja` | Repo, `bin/sysinfo.sh`, config contoh, perapian struktur folder | `lib/common.sh`, data simulasi, `docker/` (Dockerfile, run, stop, monitor), `bin/sysguard.sh`, `tests/test_integrasi.sh`, integrasi, tag, pengumpulan |
+| Zahwa Dinasty | `zahwa1515` | `lib/log.sh`, `lib/validate.sh`, `lib/collect.sh`, `tests/run_tests.sh` | `lib/checks.sh`, `bin/check.sh`, `tests/test_modul1.sh`, `bin/send_backup.sh`, user dan permission SCP, uji akses, slide |
+| Farenina Aulia Ramadhani | `aren1910` | README, KONTRIBUSI, pengujian sysinfo di VM | `lib/archive.sh`, `bin/backup.sh`, `bin/restore.sh`, `tests/test_modul2.sh`, README final, laporan pengujian |

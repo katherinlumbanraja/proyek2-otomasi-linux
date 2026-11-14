@@ -185,71 +185,153 @@ Pembagian tugas anggota ada di [KONTRIBUSI.md](KONTRIBUSI.md).
 
 # SysGuard v2: Monitoring, Backup, dan Container
 
+Proyek Akhir Praktikum Sistem Operasi, **Pilihan A (Backup dan Monitoring Layanan)**. Dua modul saling terhubung:
+
+- **Modul 1 Monitoring** (`bin/check.sh`): memeriksa layanan (HTTP 200) dan kapasitas disk.
+- **Modul 2 Backup dan Restore** (`bin/backup.sh`, `bin/restore.sh`): backup data simulasi dengan checksum, lalu restore dan verifikasi isi.
+- **Integrasi** (`bin/sysguard.sh`): hasil monitoring menentukan backup dilanjutkan atau ditolak; hasil restore selalu diverifikasi.
+
+Seluruh data yang diproses adalah data simulasi di folder `data/` (bukan data sistem maupun data pribadi).
+
+## Struktur komponen SysGuard
+| Path | Fungsi |
+|---|---|
+| `bin/check.sh`, `lib/checks.sh` | Modul 1: cek layanan dan kapasitas disk |
+| `bin/backup.sh`, `bin/restore.sh`, `lib/archive.sh` | Modul 2: backup, restore, validasi path |
+| `bin/sysguard.sh` | Integrasi kedua modul |
+| `bin/send_backup.sh` | Kirim backup lewat SCP |
+| `lib/common.sh` | Log dan exit untuk SysGuard (`logs/sysguard.log`); modul sysinfo memakai `lib/log.sh` (`logs/sysinfo.log`) |
+| `docker/Dockerfile`, `docker/run.sh`, `docker/stop.sh`, `docker/monitor.sh` | Image, siklus container, monitoring |
+| `tests/test_modul1.sh`, `tests/test_modul2.sh`, `tests/test_integrasi.sh` | Pengujian SysGuard |
+| `data/` | Data simulasi |
+
+## Kebutuhan lingkungan
+Ubuntu/Linux dengan bash, curl, tar, sha256sum, python3 (untuk test), openssh-client dan openssh-server (untuk SCP), serta Docker (`docker.io`).
+
 ## Arsitektur dan pembagian host/container
 ```
-Host (VM Ubuntu)                          Container Docker
-+----------------------------------+      +------------------------+
-| bin/check.sh      (monitoring)   | HTTP | sysguard-svc (nginx)   |
-| bin/backup.sh     (backup)       |----->| port 8080, non-root    |
-| bin/restore.sh    (restore)      |      | limit CPU 0.5, 128MB   |
-| bin/send_backup.sh (SCP)         |      +------------------------+
-| bin/sysguard.sh   (integrasi)    |
-+----------------------------------+
+Host (VM Ubuntu)                              Container Docker
++------------------------------------+       +---------------------------+
+| bin/check.sh      (monitoring)     | HTTP  | sysguard-svc (nginx)      |
+| bin/backup.sh     (backup)         |------>| non-root, port 8080       |
+| bin/restore.sh    (restore)        |       | CPU 0.5, memori 128 MB    |
+| bin/sysguard.sh   (integrasi)      |       | /data (bind mount, ro)    |
+| bin/send_backup.sh (SCP)           |       +---------------------------+
++------------------------------------+
 ```
 
-Alur: check.sh memeriksa layanan dan disk. Jika OK, backup.sh membuat archive, lalu restore.sh memverifikasi. Jika monitoring gagal, backup ditolak (exit 20).
+| Komponen | Lokasi | Alasan |
+|---|---|---|
+| Layanan yang dimonitor (nginx) | Container | Mudah dibuat ulang dan dibatasi resource |
+| Data simulasi `data/` | Bind mount dari host (read-only di container) | Tetap ada walau container dihapus |
+| Script monitoring, backup, restore, integrasi | Host | Mengontrol dari luar tanpa Docker socket |
+| Akses SCP dan user `backupuser` | Host | Akses aman dan uji permission |
+
+Alur: `bin/check.sh` memeriksa layanan dan disk. Jika OK, `bin/backup.sh` membuat archive dan `bin/restore.sh` memverifikasinya. Jika monitoring gagal, backup ditolak (exit 20).
+
+## Network dan persistensi
+- Container berada di network `sysguard-net`; port dipublikasikan hanya ke `127.0.0.1:8080`, sehingga tidak terbuka ke jaringan luar.
+- Folder `data/` di-mount ke container sebagai bind mount read-only. Setelah container dihapus dan dibuat ulang (`bash docker/stop.sh -r` lalu `bash docker/run.sh`), isi `data/` tetap tersedia.
+
+## Resource limit
+Container dijalankan dengan `--cpus 0.5` dan `--memory 128m`, tanpa `--privileged` dan tanpa Docker socket. Penerapannya diperiksa dengan `bash docker/monitor.sh` (NanoCpus, Memory, Privileged, `docker stats`, log, network).
 
 ## Instalasi
 ```bash
 git clone https://github.com/katherinlumbanraja/proyek2-otomasi-linux.git
 cd proyek2-otomasi-linux
-sudo apt install -y curl python3 openssh-client
+sudo apt install -y curl python3 openssh-client openssh-server docker.io
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"      # lalu login ulang
 ```
 
-## Menjalankan Modul 2
+## Akses aman (SCP)
+Siapkan user dan folder khusus dengan permission ketat:
 ```bash
+sudo adduser --disabled-password --gecos "" backupuser
+sudo mkdir -p /srv/sysguard-backup
+sudo chown backupuser:backupuser /srv/sysguard-backup
+sudo chmod 700 /srv/sysguard-backup
+```
+Kunci SSH dibuat di `~/.ssh` dan tidak pernah dimasukkan ke repository. Pengiriman backup:
+```bash
+bash bin/send_backup.sh -f backups/<nama>.tar.gz -t backupuser@127.0.0.1:/srv/sysguard-backup
+```
+
+## Menjalankan
+```bash
+bash docker/run.sh        # build image dan jalankan container
+bash bin/sysguard.sh      # monitoring -> backup -> restore -> verifikasi
+```
+Modul dapat dijalankan sendiri:
+```bash
+bash bin/check.sh
 bash bin/backup.sh
 bash bin/restore.sh -a backups/<nama>.tar.gz -d restore/demo
 ```
 
 ## Menguji
 ```bash
-bash tests/test_modul1.sh
-bash tests/test_modul2.sh
-bash tests/test_integrasi.sh
+bash tests/test_modul1.sh      # Modul 1: M1-01 sampai M1-04
+bash tests/test_modul2.sh      # Modul 2: M2-01 sampai M2-05
+bash tests/test_integrasi.sh   # Integrasi: INT-01, INT-01b, INT-02, INT-02b
 ```
+Test memakai layanan simulasi lokal (python http.server). Demo dengan container dan pengujian SCP dijalankan manual di VM.
 
-## Exit status Modul 2
+## Exit status SysGuard
 | Kode | Arti |
 |------|------|
 | 0 | Sukses |
-| 2 | Input salah (termasuk sumber di luar data/) |
-| 3 | File tidak ditemukan |
+| 2 | Input atau opsi tidak valid (termasuk sumber di luar `data/`) |
+| 3 | File, folder, atau perintah tidak ditemukan |
 | 4 | Folder tujuan tidak bisa ditulis |
 | 5 | Backup atau ekstraksi gagal |
 | 6 | Checksum archive tidak cocok |
 | 7 | Verifikasi isi file gagal |
+| 8 | SCP gagal (akses ditolak atau jaringan) |
+| 9 | Build atau run container gagal |
+| 10 | Layanan tidak merespons HTTP 200 |
+| 11 | Pemakaian disk melewati ambang |
 | 20 | Backup ditolak karena monitoring gagal |
 
 ## Memantau
 ```bash
 bash docker/monitor.sh
-cat logs/sysguard.log | tail -20
+tail -20 logs/sysguard.log
 ```
 
 ## Cleanup
 ```bash
-bash docker/stop.sh -r
+bash docker/stop.sh -r            # hapus container dan network
+docker rmi sysguard-svc:1.0       # hapus image (dapat dibangun ulang dari Dockerfile)
 rm -rf backups restore logs
 ```
+Folder `data/` tidak dihapus.
 
 ## Rollback
+Kode:
 ```bash
 git fetch --tags
 git checkout P2-FINAL-v01
+git switch main
+```
+Data: pulihkan dari backup yang sudah terverifikasi:
+```bash
+bash bin/restore.sh -a backups/<nama>.tar.gz -d restore/rollback
 ```
 
+## Keamanan
+- Sumber backup hanya boleh di dalam `data/`; path di luar repository ditolak.
+- Container non-root, tanpa `--privileged`, tanpa Docker socket, port hanya ke localhost.
+- Tidak ada password, token, atau private key di repository.
+
 ## Keterbatasan
-- Data yang di-backup hanya data simulasi di folder data/.
-- Archive belum dienkripsi.
-- Pengujian SCP dan Docker dijalankan manual di VM.
+- Data yang di-backup hanya data simulasi di folder `data/`.
+- Pemeriksaan layanan hanya HTTP 200 pada satu layanan.
+- SCP diuji ke `127.0.0.1` (satu VM), bukan antar mesin.
+- Archive belum dienkripsi; belum ada penjadwalan otomatis dan rotasi backup.
+- Test otomatis memakai layanan simulasi; pengujian SCP dan Docker dijalankan manual di VM.
+- Output dinamis (waktu, ukuran, IP) berbeda di tiap sistem.
+
+## Kontribusi
+Lihat [KONTRIBUSI.md](KONTRIBUSI.md).
