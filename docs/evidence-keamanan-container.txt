@@ -1,8 +1,8 @@
-# Bukti pembatasan keamanan container - 2026-11-10 06:02:49
+# Bukti pembatasan keamanan container - 2026-11-14 02:33:35
 ## Privileged, CapDrop, SecurityOpt
 Privileged=false CapDrop=[ALL] SecurityOpt=[no-new-privileges]
 ## Mount (tidak boleh ada docker.sock)
-/home/katherinlr/proyek2-otomasi-linux/data -> /usr/share/nginx/html/data rw=false
+/home/<user>/proyek2-otomasi-linux/data -> /usr/share/nginx/html/data rw=false
 
 ## Port yang dipublikasikan
 {"8080/tcp":[{"HostIp":"127.0.0.1","HostPort":"8080"}]}

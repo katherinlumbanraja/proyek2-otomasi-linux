@@ -1,0 +1,12 @@
+# config/sysguard.conf.example - contoh konfigurasi SysGuard (tanpa rahasia)
+# Nilai di bawah setara dengan opsi script; script belum membaca file ini.
+SERVICE_URL=http://127.0.0.1:8080/
+DISK_THRESHOLD_PERCENT=90
+BACKUP_SOURCE=data
+BACKUP_DEST=backups
+RESTORE_VERIFY_DIR=restore/verifikasi
+SCP_TARGET=backupuser@127.0.0.1:/srv/sysguard-backup
+CONTAINER_NAME=sysguard-svc
+CONTAINER_CPUS=0.5
+CONTAINER_MEMORY=128m
+# Kunci SSH TIDAK disimpan di repository (gunakan ~/.ssh).

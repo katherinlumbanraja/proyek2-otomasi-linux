@@ -1,0 +1,60 @@
+# Demo integrasi dengan container - 2026-11-14 02:33:26
+## 1 Container hidup -> backup dilanjutkan
+[2026-11-14 02:33:26] [INFO] SysGuard mulai
+[2026-11-14 02:33:27] [INFO] Monitoring OK -> backup dilanjutkan
+[2026-11-14 02:33:27] [INFO] SysGuard selesai: backup dan restore terverifikasi (/home/<user>/proyek2-otomasi-linux/backups/backup_20261114_023327_2307.tar.gz)
+exit: 0
+backups/:
+backup_20261109_182241_3857.manifest
+backup_20261109_182241_3857.tar.gz
+backup_20261109_182241_3857.tar.gz.sha256
+backup_20261114_023327_2307.manifest
+backup_20261114_023327_2307.tar.gz
+backup_20261114_023327_2307.tar.gz.sha256
+
+restore/verifikasi/:
+catatan.txt
+pelanggan.csv
+## 2 Container dihapus -> backup ditolak
+[2026-11-14 02:33:28] [INFO] Container dihentikan: sysguard-svc
+[2026-11-14 02:33:29] [INFO] Container dan network dihapus (folder data/ tetap ada)
+[2026-11-14 02:33:29] [INFO] SysGuard mulai
+[2026-11-14 02:33:29] [WARN] Monitoring gagal (kode 10) -> BACKUP DITOLAK
+exit: 20
+## 3 Container dibuat ulang -> data masih ada (persistensi)
+[2026-11-14 02:33:29] [INFO] Build image sysguard-svc:1.0
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+[2026-11-14 02:33:30] [INFO] Run container sysguard-svc (cpu 0.5, memori 128m, port 127.0.0.1:8080)
+[2026-11-14 02:33:32] [INFO] Menunggu layanan siap (maks 20 detik)
+[2026-11-14 02:33:33] [INFO] Container berjalan dan layanan merespons: http://127.0.0.1:8080/
+Data simulasi SysGuard - bukan data pribadi.
+Catatan 1: stok barang contoh.
+## Log aktivitas
+[2026-11-14 02:33:24] [INFO] Menunggu layanan siap (maks 20 detik)
+[2026-11-14 02:33:26] [INFO] Container berjalan dan layanan merespons: http://127.0.0.1:8080/
+[2026-11-14 02:33:26] [INFO] SysGuard mulai
+[2026-11-14 02:33:26] [INFO] Cek mulai. url=http://127.0.0.1:8080/ path=/home/<user>/proyek2-otomasi-linux/backups ambang=90%
+[2026-11-14 02:33:26] [INFO] Layanan OK (HTTP 200): http://127.0.0.1:8080/
+[2026-11-14 02:33:26] [INFO] Disk OK: 47% < 90%
+[2026-11-14 02:33:26] [INFO] Cek selesai: SEMUA OK
+[2026-11-14 02:33:27] [INFO] Monitoring OK -> backup dilanjutkan
+[2026-11-14 02:33:27] [INFO] Backup mulai. sumber=/home/<user>/proyek2-otomasi-linux/data file=2 tujuan=/home/<user>/proyek2-otomasi-linux/backups/backup_20261114_023327_2307.tar.gz
+[2026-11-14 02:33:27] [INFO] Backup sukses: /home/<user>/proyek2-otomasi-linux/backups/backup_20261114_023327_2307.tar.gz
+[2026-11-14 02:33:27] [INFO] Restore mulai. archive=/home/<user>/proyek2-otomasi-linux/backups/backup_20261114_023327_2307.tar.gz target=/home/<user>/proyek2-otomasi-linux/restore/verifikasi
+[2026-11-14 02:33:27] [INFO] Checksum archive cocok
+[2026-11-14 02:33:27] [INFO] Verifikasi isi file OK: semua file sama dengan manifest
+[2026-11-14 02:33:27] [INFO] Restore sukses: /home/<user>/proyek2-otomasi-linux/restore/verifikasi
+[2026-11-14 02:33:27] [INFO] SysGuard selesai: backup dan restore terverifikasi (/home/<user>/proyek2-otomasi-linux/backups/backup_20261114_023327_2307.tar.gz)
+[2026-11-14 02:33:28] [INFO] Container dihentikan: sysguard-svc
+[2026-11-14 02:33:29] [INFO] Container dan network dihapus (folder data/ tetap ada)
+[2026-11-14 02:33:29] [INFO] SysGuard mulai
+[2026-11-14 02:33:29] [INFO] Cek mulai. url=http://127.0.0.1:8080/ path=/home/<user>/proyek2-otomasi-linux/backups ambang=90%
+[2026-11-14 02:33:29] [ERROR] Layanan tidak merespons HTTP 200: http://127.0.0.1:8080/ (exit=10)
+[2026-11-14 02:33:29] [WARN] Monitoring gagal (kode 10) -> BACKUP DITOLAK
+[2026-11-14 02:33:29] [INFO] Build image sysguard-svc:1.0
+[2026-11-14 02:33:30] [INFO] Run container sysguard-svc (cpu 0.5, memori 128m, port 127.0.0.1:8080)
+[2026-11-14 02:33:32] [INFO] Menunggu layanan siap (maks 20 detik)
+[2026-11-14 02:33:33] [INFO] Container berjalan dan layanan merespons: http://127.0.0.1:8080/

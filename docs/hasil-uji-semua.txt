@@ -1,0 +1,34 @@
+# Hasil uji lengkap - 2026-11-14 02:37:36
+== tests/run_tests.sh
+LULUS: integer valid
+LULUS: integer huruf ditolak
+LULUS: range dalam batas
+LULUS: range di luar batas
+LULUS: string kosong ditolak
+LULUS: file ada
+LULUS: file tidak ada
+[2026-11-14 02:37:36] [INFO] Tes selesai: 7 lulus, 0 gagal
+Total: 7 lulus, 0 gagal
+-- exit suite: 0
+== tests/test_modul1.sh
+PASS  M1-01 berhasil: layanan hidup, disk di bawah ambang (exit=0)
+PASS  M1-02 gagal: layanan mati (exit=10)
+PASS  M1-03 gagal: disk melewati ambang (-t 1) (exit=11)
+PASS  M1-04 gagal: ambang bukan angka (exit=2)
+Ringkasan Modul 1: 4 lulus, 0 gagal
+-- exit suite: 0
+== tests/test_modul2.sh
+PASS  M2-01 berhasil: backup data simulasi (exit=0)
+PASS  M2-02 berhasil: restore + verifikasi (exit=0)
+PASS  M2-03 gagal: sumber di luar data/ ditolak (exit=2)
+PASS  M2-04 gagal: archive tidak ditemukan (exit=3)
+PASS  M2-05 gagal: archive diubah (checksum beda) (exit=6)
+Ringkasan Modul 2: 5 lulus, 0 gagal
+-- exit suite: 0
+== tests/test_integrasi.sh
+PASS  INT-01 berhasil: monitoring OK, backup dan restore terverifikasi (exit=0)
+PASS  INT-01b file hasil restore ada
+PASS  INT-02 gagal: layanan mati, backup ditolak (exit 20) (exit=20)
+PASS  INT-02b tidak ada backup baru saat ditolak (1 -> 1)
+Ringkasan integrasi: 4 lulus, 0 gagal
+-- exit suite: 0
